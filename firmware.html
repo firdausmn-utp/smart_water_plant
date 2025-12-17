@@ -29,8 +29,8 @@
     <h3>RTOS Task Breakdown</h3>
     <p>The system runs four primary concurrent tasks:</p>
     <ul>
-        <li><strong>SensorControlTask (Priority 5):</strong> Periodically reads the ADC value from the moisture sensor. It contains the core automation logic: if <code>Moisture < Threshold</code>, it triggers the pump.</li>
-        <li><strong>ManualButtonTask (Priority 5):</strong> Monitors the GPIO 5 button state. It uses software debouncing to reliably detect user presses for manual watering.</li>
+        <li><strong>SensorControlTask (Priority 5):</strong> Periodically reads the ADC value from the moisture sensor. It contains the core automation logic: if <code>Moisture < Threshold</code>, it triggers the water pump and activates the <strong>buzzer</strong> for audio feedback.</li>
+        <li><strong>ManualButtonTask (Priority 5):</strong> Monitors the GPIO 5 button state. It uses software debouncing to reliably detect user presses for manual watering. Pressing the button starts the cycle (Pump + LED + Buzzer); pressing it again stops it immediately.</li>
         <li><strong>OLEDUpdateTask (Priority 3):</strong> Refreshes the OLED display every 2 seconds with the latest system state (Online/Offline, Moisture %, Pump Status).</li>
         <li><strong>HeartbeatTask (Priority 2):</strong> Toggles the Status LED to indicate the system is running correctly and hasn't stalled.</li>
     </ul>
@@ -42,7 +42,7 @@
         <h4>Device Parameters</h4>
         <p>The firmware defines a virtual device with standard parameters mapped to cloud actions:</p>
         <ul>
-            <li><strong>Power (Switch):</strong> Remotely toggles the water pump on/off.</li>
+            <li><strong>Power (Switch):</strong> Remotely toggles the water pump (and buzzer) on/off.</li>
             <li><strong>Temperature/Humidity (Sensor):</strong> Reports environmental data to the dashboard.</li>
             <li><strong>Soil Moisture (Sensor):</strong> Visualizes the raw or percentage moisture level.</li>
         </ul>
