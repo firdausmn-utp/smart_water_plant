@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hardware Design - IoT Smart Garden</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+    <div class="header-container">
+        <h1>IoT Smart Garden</h1>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="hardware.html" class="active">Hardware Design</a></li>
+                <li><a href="firmware.html">Firmware Design</a></li>
+                <li><a href="outcome.html">Project Outcome</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<main>
+    <h2>Hardware Design</h2>
+    <p>The system is built around the <strong>ESP32-C3</strong>, a cost-effective RISC-V microcontroller with built-in Wi-Fi and Bluetooth LE capabilities.</p>
+
+    <h3>System Block Diagram</h3>
+    <p>The architecture consists of three main subsystems: Sensing, Actuation, and Interface.</p>
+    <!-- Placeholder for Block Diagram Image -->
+    <div style="background:#eee; padding:2rem; text-align:center; border:2px dashed #ccc;">
+        [Insert System Block Diagram Here]
+    </div>
+
+    <h3>Component Interface & Pinout</h3>
+    <p>The following table details the connection of peripherals to the ESP32-C3 GPIO pins, defined in <code>plant_driver.h</code> and <code>oled_driver.h</code>.</p>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Component</th>
+                <th>Type</th>
+                <th>ESP32-C3 Pin</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>Capacitive Moisture Sensor</strong></td>
+                <td>Input (Analog)</td>
+                <td>GPIO 4 (ADC1)</td>
+                <td>Measures soil dielectric permittivity to determine moisture content.</td>
+            </tr>
+            <tr>
+                <td><strong>Manual Button</strong></td>
+                <td>Input (Digital)</td>
+                <td>GPIO 5</td>
+                <td>Tactile switch (Active Low) for manual watering override.</td>
+            </tr>
+            <tr>
+                <td><strong>Boot Button</strong></td>
+                <td>Input (Digital)</td>
+                <td>GPIO 9</td>
+                <td>Used for flashing and long-press Wi-Fi provisioning reset.</td>
+            </tr>
+            <tr>
+                <td><strong>5V Relay Module</strong></td>
+                <td>Output (Digital)</td>
+                <td>GPIO 2</td>
+                <td>Active High trigger to switch the 5V water pump.</td>
+            </tr>
+            <tr>
+                <td><strong>SSD1306 OLED</strong></td>
+                <td>Output (I2C)</td>
+                <td>SDA: GPIO 10 <br> SCL: GPIO 9</td>
+                <td>128x32 pixel display for status and data visualization.</td>
+            </tr>
+            <tr>
+                <td><strong>Status LED</strong></td>
+                <td>Output (Digital)</td>
+                <td>GPIO 8</td>
+                <td>Visual heartbeat and connection status indicator.</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3>Power Management</h3>
+    <p>The system is powered via a standard 5V USB connection. The ESP32-C3 operates at 3.3V, regulated by an onboard LDO, while the Relay and Water Pump draw power directly from the 5V rail.</p>
+</main>
+
+<footer>
+    <p>&copy; 2025 IoT Smart Garden Project. All Rights Reserved.</p>
+</footer>
+
+</body>
+</html>
