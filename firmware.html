@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Firmware Design - IoT Smart Garden</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+    <div class="header-container">
+        <h1>IoT Smart Garden</h1>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="hardware.html">Hardware Design</a></li>
+                <li><a href="firmware.html" class="active">Firmware Design</a></li>
+                <li><a href="outcome.html">Project Outcome</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<main>
+    <h2>Firmware Architecture</h2>
+    <p>The firmware is developed using the <strong>ESP-IDF v5.5.1 framework</strong>. It utilizes <strong>FreeRTOS</strong> to manage multitasking, ensuring that network communication, sensor reading, and user interface updates occur concurrently without blocking.</p>
+
+    <h3>RTOS Task Breakdown</h3>
+    <p>The system runs four primary concurrent tasks:</p>
+    <ul>
+        <li><strong>SensorControlTask (Priority 5):</strong> Periodically reads the ADC value from the moisture sensor. It contains the core automation logic: if <code>Moisture < Threshold</code>, it triggers the pump.</li>
+        <li><strong>ManualButtonTask (Priority 5):</strong> Monitors the GPIO 5 button state. It uses software debouncing to reliably detect user presses for manual watering.</li>
+        <li><strong>OLEDUpdateTask (Priority 3):</strong> Refreshes the OLED display every 2 seconds with the latest system state (Online/Offline, Moisture %, Pump Status).</li>
+        <li><strong>HeartbeatTask (Priority 2):</strong> Toggles the Status LED to indicate the system is running correctly and hasn't stalled.</li>
+    </ul>
+
+    <h3>Cloud Integration (ESP RainMaker)</h3>
+    <p>The project leverages the AWS-based ESP RainMaker platform for secure IoT connectivity.</p>
+    
+    <div class="highlight-box">
+        <h4>Device Parameters</h4>
+        <p>The firmware defines a virtual device with standard parameters mapped to cloud actions:</p>
+        <ul>
+            <li><strong>Power (Switch):</strong> Remotely toggles the water pump on/off.</li>
+            <li><strong>Temperature/Humidity (Sensor):</strong> Reports environmental data to the dashboard.</li>
+            <li><strong>Soil Moisture (Sensor):</strong> Visualizes the raw or percentage moisture level.</li>
+        </ul>
+    </div>
+
+    <h3>Wi-Fi Provisioning Flow</h3>
+    <p>Instead of hardcoding Wi-Fi credentials, the system uses <strong>Assisted Wi-Fi Provisioning</strong>:</p>
+    <ol>
+        <li>On first boot, the device broadcasts a Bluetooth LE (BLE) signal.</li>
+        <li>The user scans a QR code (generated in the serial terminal) using the RainMaker app.</li>
+        <li>The app securely transfers the home Wi-Fi SSID and Password to the device via Bluetooth.</li>
+        <li>The device connects to the internet and links to the user's account.</li>
+    </ol>
+</main>
+
+<footer>
+    <p>&copy; 2025 IoT Smart Garden Project. All Rights Reserved.</p>
+</footer>
+
+</body>
+</html>
