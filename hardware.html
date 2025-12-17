@@ -28,7 +28,7 @@
 
     <h3>System Block Diagram</h3>
     <p>The architecture consists of three main subsystems: Sensing, Actuation, and Interface.</p>
-    <!-- Placeholder for Block Diagram Image -->
+    
     <div style="background:#eee; padding:2rem; text-align:center; border:2px dashed #ccc;">
         <img src="ESP32.png" alt="System Block Diagram showing ESP32-C3 connections to sensors and actuators" style="max-width: 100%; border: 1px solid #ddd; padding: 10px; background: #fff;">
         <p><em>Figure 1: IoT Smart Garden System Block Diagram</em></p>
@@ -82,6 +82,12 @@
                 <td>Output (Digital)</td>
                 <td>GPIO 8</td>
                 <td>Visual heartbeat and connection status indicator.</td>
+            </tr>
+            <tr>
+                <td><strong>Buzzer Module</strong></td>
+                <td>Output (Digital)</td>
+                <td>GPIO 6</td>
+                <td>Active Low trigger buzzer for audio feedback during watering cycles.</td>
             </tr>
         </tbody>
     </table>
