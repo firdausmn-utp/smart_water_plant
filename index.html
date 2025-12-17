@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IoT Smart Garden System - Project Report</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+        header {
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            padding: 2rem 0;
+            text-align: center;
+        }
+        header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+        }
+        header p {
+            margin: 0.5rem 0 0;
+            font-size: 1.1rem;
+            opacity: 0.8;
+        }
+        .container {
+            max-width: 900px;
+            margin: 2rem auto;
+            background: #fff;
+            padding: 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-radius: 8px;
+        }
+        h2 {
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 0.5rem;
+            margin-top: 2rem;
+        }
+        h3 {
+            color: #34495e;
+            margin-top: 1.5rem;
+        }
+        ul {
+            list-style-type: disc;
+            margin-left: 1.5rem;
+        }
+        li {
+            margin-bottom: 0.5rem;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+            color: #333;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        code {
+            background-color: #f4f4f4;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-family: 'Courier New', Courier, monospace;
+            color: #e74c3c;
+        }
+        .footer {
+            text-align: center;
+            padding: 2rem 0;
+            background-color: #2c3e50;
+            color: #bdc3c7;
+            margin-top: 3rem;
+        }
+        .highlight {
+            background-color: #e8f6f3;
+            border-left: 5px solid #1abc9c;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+        @media (max-width: 600px) {
+            .container {
+                padding: 1rem;
+                margin: 1rem;
+            }
+            header h1 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="header-content">
+        <h1>IoT Smart Garden System</h1>
+        <p>Automated Irrigation & Monitoring with ESP32-C3 & RainMaker</p>
+    </div>
+</header>
+
+<div class="container">
+    <section id="overview">
+        <h2>1. Project Overview</h2>
+        <p>The <strong>IoT Smart Garden</strong> is an automated plant watering system designed to maintain optimal soil moisture levels for plants. Built on the powerful <strong>ESP32-C3 microcontroller</strong>, it integrates local sensing, real-time visual feedback via an OLED display, and secure remote management through the <strong>ESP RainMaker</strong> cloud platform.</p>
+        <div class="highlight">
+            <p><strong>Key Innovation:</strong> The system features seamless integration with <strong>Voice Assistants</strong> (Alexa and Siri), allowing users to check plant status and control irrigation completely hands-free.</p>
+        </div>
+    </section>
+
+    <section id="hardware">
+        <h2>2. Hardware Design</h2>
+        
+        <h3>2.1 System Architecture</h3>
+        <p>The hardware design follows a modular approach, interfacing input sensors and output actuators with the central processing unit:</p>
+        <ul>
+            <li><strong>Input:</strong> Capacitive Soil Moisture Sensor (Analog ADC), Tactile Push Button (Digital Input).</li>
+            <li><strong>Output:</strong> 5V Relay Module (Controls Water Pump), SSD1306 OLED Display (I2C), Status LED.</li>
+            <li><strong>Power:</strong> 5V USB power supply regulating voltage for the ESP32-C3 and peripherals.</li>
+        </ul>
+
+        <h3>2.2 Schematic & Pin Configuration</h3>
+        <p>The hardware interfacing logic is encapsulated in the <code>plant_driver.h</code> and <code>oled_driver.h</code> headers:</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Component</th>
+                    <th>ESP32-C3 Pin</th>
+                    <th>Interface</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Water Pump (Relay)</strong></td>
+                    <td>GPIO 2</td>
+                    <td>Digital Out</td>
+                    <td>Active High trigger for water pump.</td>
+                </tr>
+                <tr>
+                    <td><strong>Moisture Sensor</strong></td>
+                    <td>GPIO 4</td>
+                    <td>Analog (ADC1)</td>
+                    <td>Reads soil resistance values (High = Dry).</td>
+                </tr>
+                <tr>
+                    <td><strong>Manual Button</strong></td>
+                    <td>GPIO 5</td>
+                    <td>Digital In</td>
+                    <td>Active Low (Pull-up) trigger for manual watering.</td>
+                </tr>
+                <tr>
+                    <td><strong>Status LED</strong></td>
+                    <td>GPIO 8</td>
+                    <td>Digital Out</td>
+                    <td>Indicates system heartbeat and activity.</td>
+                </tr>
+                <tr>
+                    <td><strong>OLED SDA</strong></td>
+                    <td>GPIO 10</td>
+                    <td>I2C SDA</td>
+                    <td>Data line for display communication.</td>
+                </tr>
+                <tr>
+                    <td><strong>OLED SCL</strong></td>
+                    <td>GPIO 9</td>
+                    <td>I2C SCL</td>
+                    <td>Clock line for display communication.</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section id="software">
+        <h2>3. Software Architecture</h2>
+        <p>The firmware is developed using <strong>ESP-IDF v5.5.1</strong> and leverages <strong>FreeRTOS</strong> for efficient multitasking. The codebase is structured to separate hardware abstraction layers (HAL) from the core application logic.</p>
+
+        <h3>3.1 Technology Stack</h3>
+        <ul>
+            <li><strong>Operating System:</strong> FreeRTOS (Real-Time Operating System).</li>
+            <li><strong>Cloud Platform:</strong> ESP RainMaker (AWS-based Serverless IoT).</li>
+            <li><strong>Provisioning:</strong> Wi-Fi Provisioning via BLE/SoftAP (Security 1).</li>
+        </ul>
+
+        <h3>3.2 Directory Structure</h3>
+        <ul>
+            <li><code>app_main.c</code>: System entry point. Initializes NVS, Drivers, Wi-Fi stack, and RainMaker agent.</li>
+            <li><code>app_logic.c</code>: Implements the core business logic, tasks, and global state management.</li>
+            <li><code>plant_driver.c</code>: HAL for the water pump relay and moisture sensors.</li>
+            <li><code>oled_driver.c</code>: HAL for the SSD1306 OLED display using ESP-IDF I2C Master API.</li>
+        </ul>
+    </section>
+
+    <section id="rtos">
+        <h2>4. RTOS and Multitasking Implementation</h2>
+        <p>The system utilizes FreeRTOS tasks to manage concurrent operations, ensuring that network communication does not block sensor readings or user input.</p>
+
+        <h3>4.1 Task Definition</h3>
+        <p>Four primary tasks are initialized in <code>app_tasks_start()</code>:</p>
+        <ol>
+            <li><strong><code>SensorControlTask</code> (Priority 5):</strong> Reads ADC values, evaluates "Auto-Watering" logic, and updates Cloud parameters.</li>
+            <li><strong><code>ManualButtonTask</code> (Priority 5):</strong> Polls the physical button state with software debouncing logic to trigger immediate watering.</li>
+            <li><strong><code>OLEDUpdateTask</code> (Priority 3):</strong> Refreshes the display interface every 2 seconds with connection status and sensor data.</li>
+            <li><strong><code>HeartbeatTask</code> (Priority 2):</strong> Blinks the LED to indicate system health and prevent watchdog timeouts.</li>
+        </ol>
+
+        <h3>4.2 Inter-Task Communication</h3>
+        <ul>
+            <li><strong>Global State (<code>system_state_t</code>):</strong> A shared data structure holds sensor values (`soil_moisture_raw`, `temperature`) and pump status (`is_pumping`).</li>
+            <li><strong>Mutex (<code>g_state_mutex</code>):</strong> A FreeRTOS Semaphore protects the shared state. It prevents race conditions between the Sensor task (writing data), OLED task (reading data), and Cloud callbacks (controlling actuators).</li>
+        </ul>
+    </section>
+
+    <section id="functionality">
+        <h2>5. Functionality and Cloud Integration</h2>
+
+        <h3>5.1 Cloud Features (ESP RainMaker)</h3>
+        <p>The system creates a virtual device node exposing standard parameters:</p>
+        <ul>
+            <li><strong>Power (Switch):</strong> Remote toggle for the water pump.</li>
+            <li><strong>Soil Moisture (Sensor):</strong> Real-time soil data visualization.</li>
+            <li><strong>Temperature & Humidity:</strong> Environmental monitoring.</li>
+        </ul>
+
+        <h3>5.2 Voice Assistant Integration</h3>
+        <p>The system supports advanced voice control via cloud-to-cloud integration:</p>
+        <ul>
+            <li><strong>Amazon Alexa:</strong> The water pump is exposed as a Smart Switch. Users can say <em>"Alexa, turn on the Water Pump"</em> or ask <em>"Alexa, what is the temperature in the Smart Garden?"</em>.</li>
+            <li><strong>Apple Siri (iOS Shortcuts):</strong> Integrated with Siri Shortcuts via the RainMaker iOS app. Custom phrases like <em>"Hey Siri, water the plants"</em> trigger specific actions directly from the iPhone home screen.</li>
+        </ul>
+
+        <h3>5.3 Wi-Fi Provisioning</h3>
+        <p>The project uses the <code>rmaker_app_network</code> component. Upon first boot (or after a long press of the Boot button), the device enters <strong>Provisioning Mode</strong>, generating a QR code on the serial terminal for secure Wi-Fi credential transfer via Bluetooth Low Energy (BLE).</p>
+    </section>
+</div>
+
+<footer class="footer">
+    <p>&copy; 2025 IoT Smart Garden Project. All Rights Reserved.</p>
+</footer>
+
+</body>
+</html>
